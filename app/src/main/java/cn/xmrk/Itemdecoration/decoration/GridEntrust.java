@@ -42,8 +42,8 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
                 //得到它在总数里面的位置
                 final int position = parent.getChildAdapterPosition(child);
                 //将带有颜色的分割线处于中间位置
-                final float centerLeft = (layoutManager.getLeftDecorationWidth(child) - leftRight) / 2;
-                final float centerTop = (layoutManager.getTopDecorationHeight(child) - topBottom) / 2;
+                final float centerLeft = (layoutManager.getLeftDecorationWidth(child) + 1 - leftRight) / 2;
+                final float centerTop = (layoutManager.getTopDecorationHeight(child) + 1 - topBottom) / 2;
                 //是否为最后一排
                 boolean isLast = surplusCount == 0 ?
                         position > totalCount - layoutManager.getSpanCount() - 1 :
@@ -70,10 +70,10 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
                     if (position > layoutManager.getSpanCount() - 1) {
                         top -= centerTop;
                     }
-                    bottom = child.getBottom() - params.bottomMargin;
+                    bottom = child.getBottom() + params.bottomMargin;
                     //最后一排的不需要最底下那一丢丢
                     if (!isLast) {
-                        bottom += centerTop;
+                        bottom += centerTop + topBottom;
                     }
                     mDivider.setBounds(left, top, right, bottom);
                     mDivider.draw(c);
@@ -87,8 +87,8 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
                 //得到它在总数里面的位置
                 final int position = parent.getChildAdapterPosition(child);
                 //将带有颜色的分割线处于中间位置
-                final float centerLeft = (layoutManager.getLeftDecorationWidth(child) - leftRight) / 2;
-                final float centerTop = (layoutManager.getTopDecorationHeight(child) - topBottom) / 2;
+                final float centerLeft = (layoutManager.getLeftDecorationWidth(child) + 1 - leftRight) / 2;
+                final float centerTop = (layoutManager.getTopDecorationHeight(child) + 1 - topBottom) / 2;
                 //是否为最后一排
                 boolean isLast = surplusCount == 0 ?
                         position > totalCount - layoutManager.getSpanCount() - 1 :
@@ -111,9 +111,9 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
                     if (position > layoutManager.getSpanCount() - 1) {
                         left -= centerLeft;
                     }
-                    right = child.getRight() - params.rightMargin;
+                    right = child.getRight() + params.rightMargin;
                     if (!isLast) {
-                        right += centerLeft;
+                        right += centerLeft + leftRight;
                     }
                     top = (int) (child.getBottom() + params.bottomMargin + centerTop);
                     bottom = top + topBottom;
@@ -134,7 +134,6 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
         int childPosition = parent.getChildAdapterPosition(view);
 
         if (layoutManager.getOrientation() == GridLayoutManager.VERTICAL) {//竖直方向的
-
             if (surplusCount == 0 && childPosition > totalCount - layoutManager.getSpanCount() - 1) {
                 //后面几项需要bottom
                 outRect.bottom = topBottom;
@@ -146,9 +145,7 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
             }
             outRect.top = topBottom;
             outRect.left = leftRight;
-
         } else {
-
             if (surplusCount == 0 && childPosition > totalCount - layoutManager.getSpanCount() - 1) {
                 //后面几项需要右边
                 outRect.right = leftRight;
@@ -162,4 +159,6 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
             outRect.left = leftRight;
         }
     }
+
+
 }

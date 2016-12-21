@@ -28,4 +28,16 @@
         android:layout_height="wrap_content"
         android:text="GridLayoutManager_HORIZONTAL" />
 
+    <Button
+        android:id="@+id/btn_stagger_v"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="StaggeredGridLayoutManager_Vertical" />
+
+    <Button
+        android:id="@+id/btn_stagger_h"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="StaggeredGridLayoutManager_HORIZONTAL" />
+
 </LinearLayout>

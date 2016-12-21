@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 /**
@@ -49,6 +50,8 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         //要注意这边的GridLayoutManager是继承LinearLayoutManager，所以要先判断GridLayoutManager
         if (manager instanceof GridLayoutManager) {
             entrust = new GridEntrust(leftRight, topBottom, mColor);
+        } else if (manager instanceof StaggeredGridLayoutManager) {
+            entrust = new StaggeredGridEntrust(leftRight, topBottom, mColor);
         } else {//其他的都当做Linear来进行计算
             entrust = new LinearEntrust(leftRight, topBottom, mColor);
         }

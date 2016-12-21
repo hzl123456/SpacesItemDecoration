@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.TypedValue;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class RecyclerViewActivity extends AppCompatActivity {
     public static final int LINEAR_HORIZONTAL = 2;
     public static final int GRID_VERTICAL = 3;
     public static final int GRID_HORIZONTAL = 4;
+    public static final int STAGGER_VERTICAL = 5;
+    public static final int STAGGER_HORIZONTAL = 6;
 
     private int type;
 
@@ -63,9 +66,13 @@ public class RecyclerViewActivity extends AppCompatActivity {
     private List<AdapterInfo> getAdapterInfos() {
         List<AdapterInfo> infos = new ArrayList<>();
         AdapterInfo info = null;
-        for (int i = 0; i < 22; i++) {
+        for (int i = 0; i < 6; i++) {
             info = new AdapterInfo();
-            info.message = "item" + (i + 1);
+            if ((type == STAGGER_VERTICAL || type == STAGGER_HORIZONTAL) && i % 3 == 0) {
+                info.message = "";
+            } else {
+                info.message = "item" + (i + 1);
+            }
             infos.add(info);
         }
         return infos;
@@ -86,6 +93,12 @@ public class RecyclerViewActivity extends AppCompatActivity {
             case GRID_HORIZONTAL:
                 mLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.HORIZONTAL, false);
                 break;
+            case STAGGER_VERTICAL:
+                mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+                break;
+            case STAGGER_HORIZONTAL:
+                mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
+                break;
         }
     }
 
@@ -97,8 +110,10 @@ public class RecyclerViewActivity extends AppCompatActivity {
         //添加ItemDecoration，item之间的间隔
         int leftRight = dip2px(10);
         int topBottom = dip2px(10);
+
         rv_content.addItemDecoration(new SpacesItemDecoration(leftRight, topBottom));
-        rv_content.addItemDecoration(new SpacesItemDecoration(dip2px(2), dip2px(2), getResources().getColor(R.color.colorPrimary)));
+        rv_content.addItemDecoration(new SpacesItemDecoration(dip2px(1), dip2px(1), getResources().getColor(R.color.colorPrimary)));
+
     }
 
 

@@ -40,6 +40,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         if (!TextUtils.isEmpty(info.message)) {
             holder.tvInfo.setText(info.message);
+        } else {
+            holder.tvInfo.setText(R.string.long_text);
         }
     }
 

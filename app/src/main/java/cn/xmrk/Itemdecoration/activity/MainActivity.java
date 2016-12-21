@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn_linear_h;
     private Button btn_grid_v;
     private Button btn_grid_h;
+    private Button btn_stagger_v;
+    private Button btn_stagger_h;
 
 
     @Override
@@ -36,13 +38,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_linear_h = (Button) findViewById(R.id.btn_linear_h);
         btn_grid_v = (Button) findViewById(R.id.btn_grid_v);
         btn_grid_h = (Button) findViewById(R.id.btn_grid_h);
+        btn_stagger_v = (Button) findViewById(R.id.btn_stagger_v);
+        btn_stagger_h = (Button) findViewById(R.id.btn_stagger_h);
 
 
         btn_linear_v.setOnClickListener(this);
         btn_linear_h.setOnClickListener(this);
         btn_grid_v.setOnClickListener(this);
         btn_grid_h.setOnClickListener(this);
-
+        btn_stagger_v.setOnClickListener(this);
+        btn_stagger_h.setOnClickListener(this);
     }
 
     @Override
@@ -59,6 +64,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_grid_h:
                 RecyclerViewActivity.startRecyclerViewActivity(this, RecyclerViewActivity.GRID_HORIZONTAL);
+                break;
+            case R.id.btn_stagger_v:
+                RecyclerViewActivity.startRecyclerViewActivity(this, RecyclerViewActivity.STAGGER_VERTICAL);
+                break;
+            case R.id.btn_stagger_h:
+                RecyclerViewActivity.startRecyclerViewActivity(this, RecyclerViewActivity.STAGGER_HORIZONTAL);
                 break;
         }
     }

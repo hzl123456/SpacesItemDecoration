@@ -36,7 +36,7 @@ public class LinearEntrust extends SpacesItemDecorationEntrust {
                 final View child = parent.getChildAt(i);
                 final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
                 //将有颜色的分割线处于中间位置
-                float center = (layoutManager.getTopDecorationHeight(child) - topBottom) / 2;
+                final float center = (layoutManager.getTopDecorationHeight(child) + 1 - topBottom) / 2;
                 //计算下边的
                 left = layoutManager.getLeftDecorationWidth(child);
                 right = parent.getWidth() - layoutManager.getLeftDecorationWidth(child);
@@ -50,7 +50,7 @@ public class LinearEntrust extends SpacesItemDecorationEntrust {
                 final View child = parent.getChildAt(i);
                 final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
                 //将有颜色的分割线处于中间位置
-                float center = (layoutManager.getLeftDecorationWidth(child) - leftRight) / 2;
+                final float center = (layoutManager.getLeftDecorationWidth(child) + 1 - leftRight) / 2;
                 //计算右边的
                 left = (int) (child.getRight() + params.rightMargin + center);
                 right = left + leftRight;
