@@ -40,7 +40,7 @@ public class LinearEntrust extends SpacesItemDecorationEntrust {
                 //计算下边的
                 left = layoutManager.getLeftDecorationWidth(child);
                 right = parent.getWidth() - layoutManager.getLeftDecorationWidth(child);
-                top = (int) (child.getBottom() + params.bottomMargin + center);
+                top = (int) (child.getBottom() + center);
                 bottom = top + topBottom;
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(c);
@@ -52,7 +52,7 @@ public class LinearEntrust extends SpacesItemDecorationEntrust {
                 //将有颜色的分割线处于中间位置
                 final float center = (layoutManager.getLeftDecorationWidth(child) + 1 - leftRight) / 2;
                 //计算右边的
-                left = (int) (child.getRight() + params.rightMargin + center);
+                left = (int) (child.getRight() + center);
                 right = left + leftRight;
                 top = layoutManager.getTopDecorationHeight(child);
                 bottom = parent.getHeight() - layoutManager.getTopDecorationHeight(child);

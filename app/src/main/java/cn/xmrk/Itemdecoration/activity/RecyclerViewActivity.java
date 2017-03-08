@@ -66,7 +66,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
     private List<AdapterInfo> getAdapterInfos() {
         List<AdapterInfo> infos = new ArrayList<>();
         AdapterInfo info = null;
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 40; i++) {
             info = new AdapterInfo();
             if ((type == STAGGER_VERTICAL || type == STAGGER_HORIZONTAL) && i % 3 == 0) {
                 info.message = "";
@@ -89,9 +89,23 @@ public class RecyclerViewActivity extends AppCompatActivity {
                 break;
             case GRID_VERTICAL:
                 mLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
+                final GridLayoutManager manager2 = (GridLayoutManager) mLayoutManager;
+                manager2.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        return position % manager2.getSpanCount() + 1;
+                    }
+                });
                 break;
             case GRID_HORIZONTAL:
                 mLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.HORIZONTAL, false);
+//                final GridLayoutManager manager1 = (GridLayoutManager) mLayoutManager;
+//                manager1.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//                    @Override
+//                    public int getSpanSize(int position) {
+//                        return position % manager1.getSpanCount() + 1;
+//                    }
+//                });
                 break;
             case STAGGER_VERTICAL:
                 mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
@@ -108,14 +122,13 @@ public class RecyclerViewActivity extends AppCompatActivity {
         rv_content.setLayoutManager(mLayoutManager);
 
         //添加ItemDecoration，item之间的间隔
-        int leftRight = dip2px(10);
-        int topBottom = dip2px(10);
+        int leftRight = dip2px(12);
+        int topBottom = dip2px(12);
 
         rv_content.addItemDecoration(new SpacesItemDecoration(leftRight, topBottom));
-        rv_content.addItemDecoration(new SpacesItemDecoration(dip2px(1), dip2px(1), getResources().getColor(R.color.colorPrimary)));
+    //    rv_content.addItemDecoration(new SpacesItemDecoration(dip2px(1), dip2px(1), Color.BLUE));
 
     }
-
 
     public int dip2px(float dpValue) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, getResources().getDisplayMetrics());
