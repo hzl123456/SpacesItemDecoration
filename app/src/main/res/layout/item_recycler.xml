@@ -3,10 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_item_press"
-    android:paddingBottom="7dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
-    android:paddingTop="7dp">
+    android:padding="10dp">
 
     <TextView
         android:id="@+id/tv_info"

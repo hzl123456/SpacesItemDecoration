@@ -132,9 +132,8 @@ public class StaggeredGridEntrust extends SpacesItemDecorationEntrust {
         final int count = lp.isFullSpan() ? layoutManager.getSpanCount() : 1;
 
         if (layoutManager.getOrientation() == GridLayoutManager.VERTICAL) {
-            if (childPosition + count - 1 < spanCount && firstLineCount < spanCount) {//第一排的需要上面
+            if (childPosition + count - 1 < spanCount) {//第一排的需要上面
                 outRect.top = topBottom;
-                firstLineCount += count;
             }
             if (lp.getSpanIndex() + count == spanCount) {//最边上的需要右边,这里需要考虑到一个合并项的问题
                 outRect.right = leftRight;
@@ -143,9 +142,8 @@ public class StaggeredGridEntrust extends SpacesItemDecorationEntrust {
             outRect.left = leftRight;
 
         } else {
-            if (childPosition + count - 1 < spanCount && firstLineCount < spanCount) {//第一排的需要left
+            if (childPosition + count - 1 < spanCount) {//第一排的需要left
                 outRect.left = leftRight;
-                firstLineCount += count;
             }
             if (lp.getSpanIndex() + count == spanCount) {//最边上的需要bottom
                 outRect.bottom = topBottom;

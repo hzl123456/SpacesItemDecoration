@@ -95,14 +95,23 @@ public class RecyclerViewActivity extends AppCompatActivity {
                     public int getSpanSize(int position) {
                         if (position == 0) {
                             return manager2.getSpanCount();
-                        } else {
-                            return 1;
                         }
+                        return position % manager2.getSpanCount() + 1;
                     }
                 });
                 break;
             case GRID_HORIZONTAL:
                 mLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.HORIZONTAL, false);
+                final GridLayoutManager manager3 = (GridLayoutManager) mLayoutManager;
+                manager3.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        if (position == 0) {
+                            return manager3.getSpanCount();
+                        }
+                        return position % manager3.getSpanCount() + 1;
+                    }
+                });
                 break;
             case STAGGER_VERTICAL:
                 mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);

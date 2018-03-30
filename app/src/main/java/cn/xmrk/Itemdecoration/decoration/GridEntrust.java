@@ -129,9 +129,8 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
 
         if (layoutManager.getOrientation() == GridLayoutManager.VERTICAL) {
             //判断是否在第一排
-            if (childPosition + lp.getSpanSize() - 1 < spanCount && firstLineCount < spanCount) {//第一排的需要上面
+            if (layoutManager.getSpanSizeLookup().getSpanGroupIndex(childPosition, spanCount) == 0) {//第一排的需要上面
                 outRect.top = topBottom;
-                firstLineCount += lp.getSpanSize();
             }
             if (lp.getSpanIndex() + lp.getSpanSize() == spanCount) {//最边上的需要右边,这里需要考虑到一个合并项的问题
                 outRect.right = leftRight;
@@ -139,9 +138,8 @@ public class GridEntrust extends SpacesItemDecorationEntrust {
             outRect.bottom = topBottom;
             outRect.left = leftRight;
         } else {
-            if (childPosition + lp.getSpanSize() - 1 < spanCount && firstLineCount < spanCount) {//第一排的需要left
+            if (layoutManager.getSpanSizeLookup().getSpanGroupIndex(childPosition, spanCount) == 0) {//第一排的需要left
                 outRect.left = leftRight;
-                firstLineCount += lp.getSpanSize();
             }
             if (lp.getSpanIndex() + lp.getSpanSize() == spanCount) {//最边上的需要bottom
                 outRect.bottom = topBottom;
