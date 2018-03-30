@@ -20,6 +20,9 @@ public abstract class SpacesItemDecorationEntrust {
     protected int leftRight;
 
     protected int topBottom;
+    
+      //统计第一行被占用了多少格
+    protected int firstLineCount = 0;
 
     public SpacesItemDecorationEntrust(int leftRight, int topBottom, int mColor) {
         this.leftRight = leftRight;
