@@ -1,153 +1,138 @@
-package cn.xmrk.Itemdecoration.decoration;
+package cn.xmrk.Itemdecoration.activity;
 
-import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.TypedValue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.xmrk.Itemdecoration.R;
+import cn.xmrk.Itemdecoration.adapter.RecyclerAdapter;
+import cn.xmrk.Itemdecoration.decoration.SpacesItemDecoration;
+import cn.xmrk.Itemdecoration.pojo.AdapterInfo;
 
 /**
- * 作者：请叫我百米冲刺 on 2016/12/6 上午11:39
+ * 作者：请叫我百米冲刺 on 2016/12/6 下午1:27
  * 邮箱：mail@hezhilin.cc
  */
 
-public class GridEntrust extends SpacesItemDecorationEntrust {
+public class RecyclerViewActivity extends AppCompatActivity {
 
-    public GridEntrust(int leftRight, int topBottom, int mColor) {
-        super(leftRight, topBottom, mColor);
+    public static final int LINEAR_VERTICAL = 1;
+    public static final int LINEAR_HORIZONTAL = 2;
+    public static final int GRID_VERTICAL = 3;
+    public static final int GRID_HORIZONTAL = 4;
+    public static final int STAGGER_VERTICAL = 5;
+    public static final int STAGGER_HORIZONTAL = 6;
+
+    private int type;
+
+    private RecyclerView rv_content;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private RecyclerAdapter mAdapter;
+
+    public static void startRecyclerViewActivity(Activity activity, int type) {
+        Intent intent = new Intent(activity, RecyclerViewActivity.class);
+        intent.putExtra("type", type);
+        activity.startActivity(intent);
     }
 
+
     @Override
-    public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        final GridLayoutManager layoutManager = (GridLayoutManager) parent.getLayoutManager();
-        final GridLayoutManager.SpanSizeLookup lookup = layoutManager.getSpanSizeLookup();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_recycler);
+        setStatusColor();
+        initView();
+        chooseLayoutManager();
+        initRvContent();
+    }
 
-        if (mDivider == null || layoutManager.getChildCount() == 0) {
-            return;
-        }
-        //判断总的数量是否可以整除
-        int spanCount = layoutManager.getSpanCount();
-
-        int left;
-        int right;
-        int top;
-        int bottom;
-
-        final int childCount = parent.getChildCount();
-        if (layoutManager.getOrientation() == GridLayoutManager.VERTICAL) {
-
-            for (int i = 0; i < childCount; i++) {
-                final View child = parent.getChildAt(i);
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-                //得到它在总数里面的位置
-                final int position = parent.getChildAdapterPosition(child);
-                //获取它所占有的比重
-                final int spanSize = lookup.getSpanSize(position);
-                //获取每排的位置
-                final int spanIndex = lookup.getSpanIndex(position, layoutManager.getSpanCount());
-                //将带有颜色的分割线处于中间位置
-                final float centerLeft = (layoutManager.getLeftDecorationWidth(child) + 1 - leftRight) / 2;
-                final float centerTop = (layoutManager.getBottomDecorationHeight(child) + 1 - topBottom) / 2;
-                //判断是否为第一排
-                boolean isFirst = position + spanSize <= layoutManager.getSpanCount();
-                //画上边的，第一排不需要上边的,只需要在最左边的那项的时候画一次就好
-                if (!isFirst && spanIndex == 0) {
-                    left = layoutManager.getLeftDecorationWidth(child);
-                    right = parent.getWidth() - layoutManager.getLeftDecorationWidth(child);
-
-                    top = (int) (child.getTop() - centerTop) - topBottom;
-                    bottom = top + topBottom;
-                    mDivider.setBounds(left, top, right, bottom);
-                    mDivider.draw(c);
-                }
-                //最右边的一排不需要右边的
-                boolean isRight = spanIndex + spanSize == spanCount;
-                if (!isRight) {
-                    //计算右边的
-                    left = (int) (child.getRight() + centerLeft);
-                    right = left + leftRight;
-                    top = child.getTop();
-
-                    if (position + spanSize - 1 >= spanCount) {
-                        top -= centerTop;
-                    }
-                    bottom = (int) (child.getBottom() + centerTop);
-                    mDivider.setBounds(left, top, right, bottom);
-                    mDivider.draw(c);
-                }
-            }
-        } else {
-            for (int i = 0; i < childCount; i++) {
-                final View child = parent.getChildAt(i);
-                final RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-                //得到它在总数里面的位置
-                final int position = parent.getChildAdapterPosition(child);
-                //获取它所占有的比重
-                final int spanSize = lookup.getSpanSize(position);
-                //获取每排的位置
-                final int spanIndex = lookup.getSpanIndex(position, layoutManager.getSpanCount());
-                //将带有颜色的分割线处于中间位置
-                final float centerLeft = (layoutManager.getRightDecorationWidth(child) + 1 - leftRight) / 2;
-                final float centerTop = (layoutManager.getTopDecorationHeight(child) + 1 - topBottom) / 2;
-                //判断是否为第一列
-                boolean isFirst = position + spanSize <= layoutManager.getSpanCount();
-                //画左边的，第一排不需要左边的,只需要在最上边的那项的时候画一次就好
-                if (!isFirst && spanIndex == 0) {
-                    left = (int) (child.getLeft() - centerLeft) - leftRight;
-                    right = left + leftRight;
-
-                    top = layoutManager.getRightDecorationWidth(child);
-                    bottom = parent.getHeight() - layoutManager.getTopDecorationHeight(child);
-                    mDivider.setBounds(left, top, right, bottom);
-                    mDivider.draw(c);
-                }
-                //最下的一排不需要下边的
-                boolean isRight = spanIndex + spanSize == spanCount;
-                if (!isRight) {
-                    //计算右边的
-                    left = child.getLeft();
-                    if (position + spanSize - 1 >= spanCount) {
-                        left -= centerLeft;
-                    }
-                    right = (int) (child.getRight() + centerTop);
-
-                    top = (int) (child.getBottom() + centerLeft);
-                    bottom = top + leftRight;
-                    mDivider.setBounds(left, top, right, bottom);
-                    mDivider.draw(c);
-                }
-            }
+    public void setStatusColor() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary));
         }
     }
 
-    @Override
-    public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        GridLayoutManager layoutManager = (GridLayoutManager) parent.getLayoutManager();
-        final GridLayoutManager.LayoutParams lp = (GridLayoutManager.LayoutParams) view.getLayoutParams();
-        final int childPosition = parent.getChildAdapterPosition(view);
-        final int spanCount = layoutManager.getSpanCount();
-
-        if (layoutManager.getOrientation() == GridLayoutManager.VERTICAL) {
-            //判断是否在第一排
-            if (childPosition + lp.getSpanSize() - 1 < spanCount && firstLineCount < spanCount) {//第一排的需要上面
-                outRect.top = topBottom;
-                firstLineCount += lp.getSpanSize();
+    private List<AdapterInfo> getAdapterInfos() {
+        List<AdapterInfo> infos = new ArrayList<>();
+        AdapterInfo info = null;
+        for (int i = 0; i < 40; i++) {
+            info = new AdapterInfo();
+            if ((type == STAGGER_VERTICAL || type == STAGGER_HORIZONTAL) && i % 3 == 0) {
+                info.message = "";
+            } else {
+                info.message = "item" + (i + 1);
             }
-            if (lp.getSpanIndex() + lp.getSpanSize() == spanCount) {//最边上的需要右边,这里需要考虑到一个合并项的问题
-                outRect.right = leftRight;
-            }
-            outRect.bottom = topBottom;
-            outRect.left = leftRight;
-        } else {
-            if (childPosition + lp.getSpanSize() - 1 < spanCount && firstLineCount < spanCount) {//第一排的需要left
-                outRect.left = leftRight;
-                firstLineCount += lp.getSpanSize();
-            }
-            if (lp.getSpanIndex() + lp.getSpanSize() == spanCount) {//最边上的需要bottom
-                outRect.bottom = topBottom;
-            }
-            outRect.right = leftRight;
-            outRect.top = topBottom;
+            infos.add(info);
         }
+        return infos;
+    }
+
+
+    private void chooseLayoutManager() {
+        switch (type) {
+            case LINEAR_VERTICAL:
+                mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+                break;
+            case LINEAR_HORIZONTAL:
+                mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+                break;
+            case GRID_VERTICAL:
+                mLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
+                final GridLayoutManager manager2 = (GridLayoutManager) mLayoutManager;
+                manager2.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                    @Override
+                    public int getSpanSize(int position) {
+                        if (position == 0) {
+                            return manager2.getSpanCount();
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
+                break;
+            case GRID_HORIZONTAL:
+                mLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.HORIZONTAL, false);
+                break;
+            case STAGGER_VERTICAL:
+                mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
+                break;
+            case STAGGER_HORIZONTAL:
+                mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
+                break;
+        }
+    }
+
+    private void initRvContent() {
+        mAdapter = new RecyclerAdapter(getAdapterInfos());
+        rv_content.setAdapter(mAdapter);
+        rv_content.setLayoutManager(mLayoutManager);
+
+        //添加ItemDecoration，item之间的间隔
+        int leftRight = dip2px(7);
+        int topBottom = dip2px(7);
+
+        rv_content.addItemDecoration(new SpacesItemDecoration(leftRight, topBottom));
+        //    rv_content.addItemDecoration(new SpacesItemDecoration(dip2px(1), dip2px(1), Color.BLUE));
+
+    }
+
+    public int dip2px(float dpValue) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, getResources().getDisplayMetrics());
+    }
+
+    private void initView() {
+        type = getIntent().getExtras().getInt("type");
+        rv_content = (RecyclerView) findViewById(R.id.rv_content);
     }
 }
