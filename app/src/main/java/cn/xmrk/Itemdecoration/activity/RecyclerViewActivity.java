@@ -89,29 +89,16 @@ public class RecyclerViewActivity extends AppCompatActivity {
                 break;
             case GRID_VERTICAL:
                 mLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.VERTICAL, false);
-                final GridLayoutManager manager2 = (GridLayoutManager) mLayoutManager;
-                manager2.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                final GridLayoutManager manager = (GridLayoutManager) mLayoutManager;
+                manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
-                        if (position == 0) {
-                            return manager2.getSpanCount();
-                        }
-                        return position % manager2.getSpanCount() + 1;
+                        return position % (manager.getSpanCount() + 1) == 0 ? manager.getSpanCount() : 1;
                     }
                 });
                 break;
             case GRID_HORIZONTAL:
                 mLayoutManager = new GridLayoutManager(this, 3, GridLayoutManager.HORIZONTAL, false);
-                final GridLayoutManager manager3 = (GridLayoutManager) mLayoutManager;
-                manager3.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize(int position) {
-                        if (position == 0) {
-                            return manager3.getSpanCount();
-                        }
-                        return position % manager3.getSpanCount() + 1;
-                    }
-                });
                 break;
             case STAGGER_VERTICAL:
                 mLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
@@ -128,12 +115,11 @@ public class RecyclerViewActivity extends AppCompatActivity {
         rv_content.setLayoutManager(mLayoutManager);
 
         //添加ItemDecoration，item之间的间隔
-        int leftRight = dip2px(7);
-        int topBottom = dip2px(7);
+        int leftRight = dip2px(15);
+        int topBottom = dip2px(15);
 
         rv_content.addItemDecoration(new SpacesItemDecoration(leftRight, topBottom));
-        //    rv_content.addItemDecoration(new SpacesItemDecoration(dip2px(1), dip2px(1), Color.BLUE));
-
+        //rv_content.addItemDecoration(new SpacesItemDecoration(dip2px(1), dip2px(1), Color.BLUE));
     }
 
     public int dip2px(float dpValue) {

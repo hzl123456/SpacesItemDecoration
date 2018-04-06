@@ -129,27 +129,56 @@ public class StaggeredGridEntrust extends SpacesItemDecorationEntrust {
         final StaggeredGridLayoutManager.LayoutParams lp = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
         final int childPosition = parent.getChildAdapterPosition(view);
         final int spanCount = layoutManager.getSpanCount();
-        final int count = lp.isFullSpan() ? layoutManager.getSpanCount() : 1;
+        final int spanSize = lp.isFullSpan() ? layoutManager.getSpanCount() : 1;
 
         if (layoutManager.getOrientation() == GridLayoutManager.VERTICAL) {
-            if (childPosition + count - 1 < spanCount) {//第一排的需要上面
+            if (getSpanGroupIndex(childPosition, spanCount, spanSize) == 0) {//第一排的需要上面
                 outRect.top = topBottom;
             }
-            if (lp.getSpanIndex() + count == spanCount) {//最边上的需要右边,这里需要考虑到一个合并项的问题
-                outRect.right = leftRight;
-            }
             outRect.bottom = topBottom;
-            outRect.left = leftRight;
-
+            //这里忽略和合并项的问题，只考虑占满和单一的问题
+            if (lp.isFullSpan()) {//占满
+                outRect.left = leftRight;
+                outRect.right = leftRight;
+            } else {
+                outRect.left = (int) (((float) (spanCount - lp.getSpanIndex())) / spanCount * leftRight);
+                outRect.right = (int) (((float) leftRight * (spanCount + 1) / spanCount) - outRect.left);
+            }
         } else {
-            if (childPosition + count - 1 < spanCount) {//第一排的需要left
+            if (getSpanGroupIndex(childPosition, spanCount, spanSize) == 0) {//第一排的需要left
                 outRect.left = leftRight;
             }
-            if (lp.getSpanIndex() + count == spanCount) {//最边上的需要bottom
-                outRect.bottom = topBottom;
-            }
             outRect.right = leftRight;
-            outRect.top = topBottom;
+            //这里忽略和合并项的问题，只考虑占满和单一的问题
+            if (lp.isFullSpan()) {//占满
+                outRect.top = topBottom;
+                outRect.bottom = topBottom;
+            } else {
+                outRect.top = (int) (((float) (spanCount - lp.getSpanIndex())) / spanCount * topBottom);
+                outRect.bottom = (int) (((float) topBottom * (spanCount + 1) / spanCount) - outRect.top);
+            }
         }
+    }
+
+    public int getSpanGroupIndex(int adapterPosition, int spanCount, int spanSize) {
+        int span = 0;
+        int group = 0;
+        int positionSpanSize = spanSize;
+        for (int i = 0; i < adapterPosition; i++) {
+            int size = spanSize;
+            span += size;
+            if (span == spanCount) {
+                span = 0;
+                group++;
+            } else if (span > spanCount) {
+                // did not fit, moving to next row / column
+                span = size;
+                group++;
+            }
+        }
+        if (span + positionSpanSize > spanCount) {
+            group++;
+        }
+        return group;
     }
 }
